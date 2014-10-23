@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/card_body_pedido_inner_layout"
+    android:layout_marginLeft="@dimen/card_inner_margin"
+    android:layout_marginRight="@dimen/card_inner_margin">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ok"
+        android:id="@+id/button"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:focusable="false" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Just an Example"
+        android:id="@+id/textView"
+        android:layout_toStartOf="@+id/button"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/button"
+        android:layout_marginRight="63dp"
+        android:focusable="false" />
+</RelativeLayout>

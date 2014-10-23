@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/id_card_header_pedido_inner_layout">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:textSize="15sp"
+        android:text="Text Header Example:"
+        android:id="@+id/txtvwHeaderValue2"
+        android:textColor="@color/card_text_color"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginRight="2dp"
+        android:focusable="false" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textSize="15sp"
+        android:text=" Just an value"
+        android:id="@+id/txtvwHeaderValue1"
+        android:textColor="@color/card_text_color"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_vertical"
+        android:focusable="false" />
+</LinearLayout>

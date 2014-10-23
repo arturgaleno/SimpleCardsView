@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+        <declare-styleable name="CardHeader">
+            <attr name="hasCustomInnerLayout" format="boolean" />
+            <attr name="hasButton" format="boolean" />
+            <attr name="customInnerLayout" format="reference" />
+            <attr name="buttonDrawable" format="reference"/>
+            <attr name="buttonType" format="enum">
+                <enum name="expand" value="0"/>
+                <enum name="overflow" value="1"/>
+            </attr>
+        </declare-styleable>
+
+        <declare-styleable name="Card">
+            <attr name="header" format="reference" />
+            <attr name="body" format="reference" />
+            <attr name="cardToExpand" format="reference" />
+        </declare-styleable>
+
+    <declare-styleable name="CardBody">
+        <attr name="content" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="CardExpand">
+        <attr name="contentToExpand" format="reference" />
+    </declare-styleable>
+
+</resources>

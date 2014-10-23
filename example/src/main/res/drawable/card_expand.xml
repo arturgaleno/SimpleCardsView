@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle"
+            android:dither="true">
+
+            <corners android:bottomLeftRadius="2dp" android:bottomRightRadius="2dp"/>
+
+            <solid android:color="#ccc" />
+
+        </shape>
+    </item>
+
+    <item android:bottom="2dp">
+        <shape android:shape="rectangle"
+            android:dither="true">
+
+            <corners android:bottomLeftRadius="2dp" android:bottomRightRadius="2dp"/>
+
+            <!--<solid android:color="@color/card_expand" />-->
+            <solid android:color="#BBDD99" />
+
+        </shape>
+    </item>
+</layer-list>
