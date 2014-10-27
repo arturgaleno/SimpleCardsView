@@ -104,6 +104,27 @@ public class CardHeader extends FrameLayout {
         }
     }
 
+    public void refresh() {
+        if (hasButton) {
+
+            if (buttonType == 0) { //expand
+                button = (ImageView) findViewById(R.id.card_header_button);
+                button.setVisibility(VISIBLE);
+            } else if (buttonType == 1) { //overflow
+                button = (ImageView) findViewById(R.id.card_header_button);
+                button.setVisibility(VISIBLE);
+            }
+
+            if (button instanceof ImageView) {
+                button.setImageDrawable(getContext().getResources().getDrawable(buttonDrawable));
+            }
+
+            if (!hasButton) {
+                if (button instanceof ImageButton) button.setVisibility(GONE);
+            }
+        }
+    }
+
     public View getView() {
         return thisCardHeader;
     }

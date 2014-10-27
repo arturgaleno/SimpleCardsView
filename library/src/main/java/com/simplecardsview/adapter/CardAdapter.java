@@ -60,12 +60,12 @@ public class CardAdapter extends ArrayAdapter<Entity> {
         } else {
 
             Card card = (Card) convertView;
-
+            card.getTag();
             if (position != card.getIndentifier()) {
                 if (card.isExpanded()) {
 
                     card.getCardExpand().setVisibility(View.GONE);
-                    ((CardHeader) card.getCardHeader()).getButton().setSelected(false);
+                    card.getCardHeader().getButton().setSelected(false);
                     card.setExpanded(false);
 
                 }
@@ -75,6 +75,7 @@ public class CardAdapter extends ArrayAdapter<Entity> {
             viewHolder.setEntity(entity);
             card.setTag(viewHolder);
             card.setIndentifier(position);
+
         }
 
         return convertView;

@@ -203,6 +203,30 @@ public class Card extends FrameLayout {
 
     }
 
+    public void refresh() {
+        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        bodyLayout = (LinearLayout) findViewById(R.id.bodyLayout);
+        headerLayout = (LinearLayout) findViewById(R.id.headerLayout);
+        expandLayout = (LinearLayout) findViewById(R.id.expandLayout);
+
+        bodyLayout.removeAllViews();
+        headerLayout.removeAllViews();
+        expandLayout.removeAllViews();
+
+        ViewGroup bodyViewGroup = (ViewGroup) inflater.inflate(idCardBody, bodyLayout, true);
+        ViewGroup headerViewGroup = (ViewGroup) inflater.inflate(idCardHeader, headerLayout, true);
+        ViewGroup expandViewGroup = (ViewGroup) inflater.inflate(idCardExpand, expandLayout, true);
+
+        findCardBody(bodyViewGroup);
+        findCardHeader(headerViewGroup);
+        findCardExpand(expandViewGroup);
+
+        configButton();
+
+        setupExpandAction();
+    }
+
     public static ValueAnimator createHeightAnimator(final View view, final int start, final int end) {
         ValueAnimator animator = ValueAnimator.ofInt(start, end);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -286,12 +310,15 @@ public class Card extends FrameLayout {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
+        configButton();
+    }
 
+    public void configButton() {
         if (cardHeader.getButton() != null) {
             cardHeader.getButton().setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (expanded == false) {
+                    if (cardExpand.getVisibility() == View.GONE) {
                         expandAnimator.start();
                     } else {
                         collapseAnimator.start();
@@ -300,8 +327,6 @@ public class Card extends FrameLayout {
                 }
             });
         }
-
-
     }
 
     public void listViewAnimatorExpand() {
@@ -354,15 +379,15 @@ public class Card extends FrameLayout {
         });
     }
 
-    public View getCardHeader() {
+    public CardHeader getCardHeader() {
         return cardHeader;
     }
 
-    public View getCardExpand() {
+    public CardExpand getCardExpand() {
         return cardExpand;
     }
 
-    public View getCardBody() {
+    public CardBody getCardBody() {
         return cardBody;
     }
 
