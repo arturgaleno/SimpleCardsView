@@ -16,6 +16,7 @@ import java.util.List;
 
 public class CardAdapter extends ArrayAdapter<Entity> {
 
+    private List<Entity> objects;
     private Context context;
     private Class viewHolderClaz;
     private int resource;
@@ -26,7 +27,7 @@ public class CardAdapter extends ArrayAdapter<Entity> {
         this.viewHolderClaz = viewHolderClaz;
         this.context = context;
         this.resource = resource;
-
+        this.objects = objects;
     }
 
     @Override
@@ -41,8 +42,6 @@ public class CardAdapter extends ArrayAdapter<Entity> {
             e.printStackTrace();
         }
 
-        Entity entity = getItem(position);
-
         if (convertView == null) {
 
             LayoutInflater layoutInflater = LayoutInflater.from(this.context);
@@ -51,31 +50,32 @@ public class CardAdapter extends ArrayAdapter<Entity> {
             viewHolder.setParent(convertView);
             viewHolder.instanciate();
 
-            viewHolder.setEntity(entity);
-
             convertView.setTag(viewHolder);
 
-            ((Card) convertView).setIndentifier(position);
-
         } else {
+            viewHolder = (ViewHolder) convertView.getTag();
+        }
 
-            Card card = (Card) convertView;
-            card.getTag();
-            if (position != card.getIndentifier()) {
-                if (card.isExpanded()) {
+        Entity entity = objects.get(position);
 
-                    card.getCardExpand().setVisibility(View.GONE);
-                    card.getCardHeader().getButton().setSelected(false);
-                    card.setExpanded(false);
-
+        if (entity != null) {
+            if (!entity.isExpanded()) {
+                if (((Card) convertView).getCardExpand().getVisibility() != View.GONE) {
+                    ((Card) convertView).getCardExpand().setVisibility(View.GONE);
+                }
+                if (((Card) convertView).getCardHeader().getButton().isSelected()) {
+                    ((Card) convertView).getCardHeader().getButton().setSelected(false);
+                }
+            } else if (entity.isExpanded()) {
+                if (((Card) convertView).getCardExpand().getVisibility() != View.VISIBLE) {
+                    ((Card) convertView).getCardExpand().setVisibility(View.VISIBLE);
+                }
+                if (!((Card) convertView).getCardHeader().getButton().isSelected()) {
+                    ((Card) convertView).getCardHeader().getButton().setSelected(true);
                 }
             }
-
-            viewHolder = (ViewHolder) card.getTag();
+            notifyDataSetChanged();
             viewHolder.setEntity(entity);
-            card.setTag(viewHolder);
-            card.setIndentifier(position);
-
         }
 
         return convertView;

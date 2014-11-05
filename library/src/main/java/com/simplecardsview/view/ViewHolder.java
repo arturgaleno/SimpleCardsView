@@ -12,6 +12,8 @@ public interface ViewHolder {
 
     void setEntity(Entity entity);
 
+    Entity getEntity();
+
     void instanciate();
 
     void setParent(View parent);

@@ -76,4 +76,9 @@ public class CardExpand extends FrameLayout {
     public void setIdCardExpand(int idCardExpand) {
         this.idCardExpand = idCardExpand;
     }
+
+    @Override
+    public void setVisibility(int visibility) {
+        super.setVisibility(visibility);
+    }
 }

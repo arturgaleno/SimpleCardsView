@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -49,8 +50,6 @@ public class Card extends FrameLayout {
     private Integer indentifier;
 
     protected Animator expandAnimator, collapseAnimator;
-
-    private boolean expanded;
 
     private boolean refreshed = false;
 
@@ -318,15 +317,37 @@ public class Card extends FrameLayout {
             cardHeader.getButton().setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (cardExpand.getVisibility() == View.GONE) {
+                    if (cardExpand.getVisibility() == View.GONE && !((ViewHolder) thisView.getTag()).getEntity().isExpanded()) {
                         expandAnimator.start();
-                    } else {
+                    } else if (cardExpand.getVisibility() == View.GONE && ((ViewHolder) thisView.getTag()).getEntity().isExpanded()) {
+                        cardExpand.setVisibility(View.VISIBLE);
+                        view.setSelected(true);
+                    } else if (cardExpand.getVisibility() == View.VISIBLE && ((ViewHolder) thisView.getTag()).getEntity().isExpanded()) {
                         collapseAnimator.start();
+                    } else if (cardExpand.getVisibility() == View.VISIBLE && !((ViewHolder) thisView.getTag()).getEntity().isExpanded()) {
+                        cardExpand.setVisibility(View.GONE);
+                        view.setSelected(false);
                     }
-
                 }
             });
         }
+    }
+
+    public void listViewDisableTouch() {
+            listViewOrGridView.setOnTouchListener(new OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
+                        motionEvent.setAction(MotionEvent.ACTION_CANCEL);
+                        return false;
+                    }
+                    return true;
+                }
+        });
+    }
+
+    public void listViewEnableTouch() {
+        listViewOrGridView.setOnTouchListener(null);
     }
 
     public void listViewAnimatorExpand() {
@@ -358,7 +379,7 @@ public class Card extends FrameLayout {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                setExpanded(true);
+                ((ViewHolder) getTag()).getEntity().setExpanded(true);
                 ((ArrayAdapter) listViewOrGridView.getAdapter()).notifyDataSetChanged();
             }
         });
@@ -368,12 +389,13 @@ public class Card extends FrameLayout {
 
         collapseAnimator.addListener(new AnimatorListenerAdapter() {
 
+
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
                 cardExpand.setVisibility(View.GONE);
                 cardHeader.getButton().setSelected(false);
-                setExpanded(false);
+                ((ViewHolder) getTag()).getEntity().setExpanded(false);
                 ((ArrayAdapter) listViewOrGridView.getAdapter()).notifyDataSetChanged();
             }
         });
@@ -391,16 +413,8 @@ public class Card extends FrameLayout {
         return cardBody;
     }
 
-    public boolean isExpanded() {
-        return expanded;
-    }
-
     public Animator getExpandAnimator() {
         return expandAnimator;
-    }
-
-    public void setExpanded(boolean expanded) {
-        this.expanded = expanded;
     }
 
     public Animator getCollapseAnimator() {

@@ -18,6 +18,8 @@ public class MyViewHolder implements ViewHolder {
 
      View parent;
 
+     Entity entity;
+
      TextView txtvwHeader,
              txtvwExpand;
 
@@ -29,9 +31,14 @@ public class MyViewHolder implements ViewHolder {
 
     @Override
     public void setEntity(Entity entity) {
-
+        this.entity = entity;
         txtvwHeader.setText(((MyEntity) entity).getValue1());
         txtvwExpand.setText(((MyEntity) entity).getValue2());
+    }
+
+    @Override
+    public Entity getEntity() {
+        return this.entity;
     }
 
     @Override

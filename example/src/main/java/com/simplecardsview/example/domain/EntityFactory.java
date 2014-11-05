@@ -9,7 +9,7 @@ import java.util.logging.Logger;
  * Created by artur on 03/09/14.
  */
 
-public class EntityFactory implements Entity {
+public class EntityFactory extends Entity {
 
     public static Entity getInstance(Object claz) {
 
