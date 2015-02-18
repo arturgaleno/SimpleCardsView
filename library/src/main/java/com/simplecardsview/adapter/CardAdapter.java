@@ -35,7 +35,7 @@ public class CardAdapter extends ArrayAdapter<Entity> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        boolean reciclando;
+        boolean recycling;
 
         ViewHolder viewHolder = null;
         try {
@@ -56,11 +56,11 @@ public class CardAdapter extends ArrayAdapter<Entity> {
 
             convertView.setTag(viewHolder);
 
-            reciclando = false;
+            recycling = false;
 
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
-            reciclando = true;
+            recycling = true;
         }
 
         Entity entity = getItem(position);
@@ -91,7 +91,7 @@ public class CardAdapter extends ArrayAdapter<Entity> {
                 }
             }
 
-            if (configureListener != null) configureListener.onConfigure((Card) convertView, entity, viewHolder, position, reciclando);
+            if (configureListener != null) configureListener.onConfigure((Card) convertView, entity, viewHolder, position, recycling);
             viewHolder.setEntity(entity);
         }
 
