@@ -1,11 +1,14 @@
 package com.simplecardsview.example.view;
 
+import android.animation.Animator;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -63,6 +66,10 @@ public class MyListFragment extends ListFragment {
         cardAdapter.setConfigureListener(new CardAdapter.ConfigureListener() {
             @Override
             public void onConfigure(Card card, Entity entity, ViewHolder viewHolder, int position, boolean recycling) {
+
+                Animation animation = AnimationUtils.makeInAnimation(getActivity(), true);
+                animation.setStartOffset((position % 10)*75);
+                card.startAnimation(animation);
 
                 MyViewHolder myViewHolder = (MyViewHolder) viewHolder;
 
