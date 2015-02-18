@@ -3,6 +3,7 @@ package com.simplecardsview.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -13,7 +14,9 @@ import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.GridView;
+import android.widget.HeaderViewListAdapter;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.nineoldandroids.animation.Animator;
@@ -52,6 +55,8 @@ public class Card extends FrameLayout {
     protected Animator expandAnimator, collapseAnimator;
 
     private boolean refreshed = false;
+
+    private ListAdapter adapter;
 
     public Card(Context context) {
         super(context);
@@ -185,20 +190,35 @@ public class Card extends FrameLayout {
 
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         thisView = inflater.inflate(R.layout.card, this, true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            thisView.setBackground(getResources().getDrawable(R.drawable.card));
+        } else {
+            thisView.setBackgroundResource(R.drawable.card);
+        }
 
         bodyLayout = (LinearLayout) findViewById(R.id.bodyLayout);
         headerLayout = (LinearLayout) findViewById(R.id.headerLayout);
         expandLayout = (LinearLayout) findViewById(R.id.expandLayout);
 
-        ViewGroup bodyViewGroup = (ViewGroup) inflater.inflate(idCardBody, bodyLayout, true);
-        ViewGroup headerViewGroup = (ViewGroup) inflater.inflate(idCardHeader, headerLayout, true);
-        ViewGroup expandViewGroup = (ViewGroup) inflater.inflate(idCardExpand, expandLayout, true);
-
-        findCardBody(bodyViewGroup);
-        findCardHeader(headerViewGroup);
-        findCardExpand(expandViewGroup);
-
-        setupExpandAction();
+        if (idCardBody != 0) {
+            ViewGroup bodyViewGroup = (ViewGroup) inflater.inflate(idCardBody, bodyLayout, true);
+            if (bodyViewGroup != null) {
+                findCardBody(bodyViewGroup);
+            }
+        }
+        if (idCardHeader != 0) {
+            ViewGroup headerViewGroup = (ViewGroup) inflater.inflate(idCardHeader, headerLayout, true);
+            if (headerViewGroup != null) {
+                findCardHeader(headerViewGroup);
+            }
+        }
+        if (idCardExpand != 0) {
+            ViewGroup expandViewGroup = (ViewGroup) inflater.inflate(idCardExpand, expandLayout, true);
+            if (expandViewGroup != null) {
+                findCardExpand(expandViewGroup);
+                setupExpandAction();
+            }
+        }
 
     }
 
@@ -213,17 +233,26 @@ public class Card extends FrameLayout {
         headerLayout.removeAllViews();
         expandLayout.removeAllViews();
 
-        ViewGroup bodyViewGroup = (ViewGroup) inflater.inflate(idCardBody, bodyLayout, true);
-        ViewGroup headerViewGroup = (ViewGroup) inflater.inflate(idCardHeader, headerLayout, true);
-        ViewGroup expandViewGroup = (ViewGroup) inflater.inflate(idCardExpand, expandLayout, true);
+        if (idCardBody != 0) {
+            ViewGroup bodyViewGroup = (ViewGroup) inflater.inflate(idCardBody, bodyLayout, true);
+            if (bodyViewGroup != null) {
+                findCardBody(bodyViewGroup);
+            }
+        }
+        if (idCardHeader != 0) {
+            ViewGroup headerViewGroup = (ViewGroup) inflater.inflate(idCardHeader, headerLayout, true);
+            if (headerViewGroup != null) {
+                findCardHeader(headerViewGroup);
+            }
+        }
+        if (idCardExpand != 0) {
+            ViewGroup expandViewGroup = (ViewGroup) inflater.inflate(idCardExpand, expandLayout, true);
+            if (expandViewGroup != null) {
+                findCardExpand(expandViewGroup);
+                setupExpandAction();
+            }
+        }
 
-        findCardBody(bodyViewGroup);
-        findCardHeader(headerViewGroup);
-        findCardExpand(expandViewGroup);
-
-        configButton();
-
-        setupExpandAction();
     }
 
     public static ValueAnimator createHeightAnimator(final View view, final int start, final int end) {
@@ -253,8 +282,14 @@ public class Card extends FrameLayout {
             if (i == 50) {  //avoid infite loop
                 throw new RuntimeException(this.getClass().getCanonicalName() + "->isInListViewOrGridView() do 50 loops, forced stop. Please, optimize your layout tree.");
             }
+            View parent = null;
 
-            View parent = (View) viewToSearch.getParent();
+            try {
+                parent = (View) viewToSearch.getParent();
+            } catch (Exception e) {
+                parent = null;
+                end = true;
+            }
 
             if (parent == null) end = true;
 
@@ -296,10 +331,18 @@ public class Card extends FrameLayout {
                             listViewOrGridView = isInListViewOrGridView(cardExpand.getView());
 
                             if (listViewOrGridView != null) {
+                                if (listViewOrGridView.getAdapter() instanceof HeaderViewListAdapter) {
+                                    adapter = (ListAdapter) ((HeaderViewListAdapter) listViewOrGridView.getAdapter()).getWrappedAdapter();
+                                } else {
+                                    adapter = (ListAdapter) listViewOrGridView.getAdapter();
+                                }
+                            }
+
+//                            if (listViewOrGridView != null) {
                                 listViewAnimatorExpand();
                                 listViewAnimatorCollapse();
 
-                            }
+//                            }
                             return true;
                         }
                     });
@@ -354,16 +397,19 @@ public class Card extends FrameLayout {
 
 
         ((ValueAnimator) expandAnimator).addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            final int listViewHeight = listViewOrGridView.getHeight();
-            final int listViewBottomPadding = listViewOrGridView.getPaddingBottom();
+            final int listViewHeight = listViewOrGridView != null ? listViewOrGridView.getHeight() : 0;
+            final int listViewBottomPadding = listViewOrGridView != null ? listViewOrGridView.getPaddingBottom() : 0;
 
             @Override
             public void onAnimationUpdate(final ValueAnimator valueAnimator) {
-                final int bottom = thisView.getBottom();
-                if (bottom > listViewHeight) {
-                    final int top = thisView.getTop();
-                    if (top > 0) {
-                        listViewOrGridView.smoothScrollBy(Math.min(bottom - listViewHeight + listViewBottomPadding, top) + cardExpand.getView().getMeasuredHeight(), 0);
+                if (listViewOrGridView != null) {
+                    final int bottom = thisView.getBottom();
+                    if (bottom > listViewHeight) {
+                        final int top = thisView.getTop();
+                        if (top > 0) {
+                            if (listViewOrGridView != null)
+                                listViewOrGridView.smoothScrollBy(Math.min(bottom - listViewHeight + listViewBottomPadding, top) + cardExpand.getView().getMeasuredHeight(), 0);
+                        }
                     }
                 }
             }
@@ -380,7 +426,8 @@ public class Card extends FrameLayout {
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
                 ((ViewHolder) getTag()).getEntity().setExpanded(true);
-                ((ArrayAdapter) listViewOrGridView.getAdapter()).notifyDataSetChanged();
+//                if (listViewOrGridView != null)
+//                    adapter.notifyDataSetChanged();
             }
         });
     }
@@ -396,7 +443,8 @@ public class Card extends FrameLayout {
                 cardExpand.setVisibility(View.GONE);
                 cardHeader.getButton().setSelected(false);
                 ((ViewHolder) getTag()).getEntity().setExpanded(false);
-                ((ArrayAdapter) listViewOrGridView.getAdapter()).notifyDataSetChanged();
+//                if (listViewOrGridView != null)
+//                    adapter.notifyDataSetChanged();
             }
         });
     }
@@ -435,5 +483,9 @@ public class Card extends FrameLayout {
 
     public void setIndentifier(Integer indentifier) {
         this.indentifier = indentifier;
+    }
+
+    public View getThisView() {
+        return thisView;
     }
 }

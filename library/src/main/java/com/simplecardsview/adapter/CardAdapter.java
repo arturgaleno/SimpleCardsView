@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
+import com.simplecardsview.R;
 import com.simplecardsview.model.Entity;
 import com.simplecardsview.view.Card;
 import com.simplecardsview.view.CardHeader;
@@ -20,6 +21,7 @@ public class CardAdapter extends ArrayAdapter<Entity> {
     private Context context;
     private Class viewHolderClaz;
     private int resource;
+    private ConfigureListener configureListener;
 
     public CardAdapter(Context context, int resource, List<Entity> objects, Class viewHolderClaz) {
         super(context, resource, objects);
@@ -28,6 +30,14 @@ public class CardAdapter extends ArrayAdapter<Entity> {
         this.context = context;
         this.resource = resource;
         this.objects = objects;
+    }
+
+    public CardAdapter(Context context, int resource, Class viewHolderClaz) {
+        super(context, resource);
+
+        this.viewHolderClaz = viewHolderClaz;
+        this.context = context;
+        this.resource = resource;
     }
 
     @Override
@@ -56,29 +66,51 @@ public class CardAdapter extends ArrayAdapter<Entity> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        Entity entity = objects.get(position);
+        Entity entity = getItem(position);
 
         if (entity != null) {
+
             if (!entity.isExpanded()) {
-                if (((Card) convertView).getCardExpand().getVisibility() != View.GONE) {
-                    ((Card) convertView).getCardExpand().setVisibility(View.GONE);
+                if (((Card) convertView).getCardExpand() != null) {
+                    if (((Card) convertView).getCardExpand().getVisibility() != View.GONE) {
+                        ((Card) convertView).getCardExpand().setVisibility(View.GONE);
+                    }
                 }
-                if (((Card) convertView).getCardHeader().getButton().isSelected()) {
-                    ((Card) convertView).getCardHeader().getButton().setSelected(false);
+                if (((Card) convertView).getCardHeader().getButton() != null) {
+                    if (((Card) convertView).getCardHeader().getButton().isSelected()) {
+                        ((Card) convertView).getCardHeader().getButton().setSelected(false);
+                    }
                 }
             } else if (entity.isExpanded()) {
-                if (((Card) convertView).getCardExpand().getVisibility() != View.VISIBLE) {
-                    ((Card) convertView).getCardExpand().setVisibility(View.VISIBLE);
+                if (((Card) convertView).getCardExpand() != null) {
+                    if (((Card) convertView).getCardExpand().getVisibility() != View.VISIBLE) {
+                        ((Card) convertView).getCardExpand().setVisibility(View.VISIBLE);
+                    }
                 }
-                if (!((Card) convertView).getCardHeader().getButton().isSelected()) {
-                    ((Card) convertView).getCardHeader().getButton().setSelected(true);
+                if (((Card) convertView).getCardHeader().getButton() != null) {
+                    if (!((Card) convertView).getCardHeader().getButton().isSelected()) {
+                        ((Card) convertView).getCardHeader().getButton().setSelected(true);
+                    }
                 }
             }
             notifyDataSetChanged();
+            if (configureListener != null) configureListener.onConfigure((Card) convertView, entity);
             viewHolder.setEntity(entity);
         }
 
         return convertView;
+    }
+
+    public ConfigureListener getConfigureListener(ConfigureListener configureListener) {
+        return this.configureListener;
+    }
+
+    public void setConfigureListener(ConfigureListener configureListener) {
+        this.configureListener = configureListener;
+    }
+
+    public interface ConfigureListener {
+        public void onConfigure(Card card, Entity entity);
     }
 
 }

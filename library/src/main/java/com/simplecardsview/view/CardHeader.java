@@ -5,6 +5,8 @@ import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -80,12 +82,13 @@ public class CardHeader extends FrameLayout {
     protected void initView() {
 
         if (hasButton || hasCustomInnerLayout) {
-//            this.removeAllViews();
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             thisCardHeader = inflater.inflate(R.layout.card_header, this, true);
-            if (hasCustomInnerLayout)
-                customInnerLayout = inflater.inflate(idCustomInnerLayout, this, true);
-
+            if (hasCustomInnerLayout) {
+                ViewGroup cardHeaderInnerFrame = (ViewGroup) findViewById(R.id.card_header_inner_frame);
+                customInnerLayout = inflater.inflate(idCustomInnerLayout, null);
+                cardHeaderInnerFrame.addView(customInnerLayout);
+            }
             if (buttonType == 0) { //expand
                 button = (ImageView) findViewById(R.id.card_header_button);
                 button.setVisibility(VISIBLE);
