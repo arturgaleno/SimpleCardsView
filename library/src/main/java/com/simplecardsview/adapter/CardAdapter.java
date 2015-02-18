@@ -32,16 +32,10 @@ public class CardAdapter extends ArrayAdapter<Entity> {
         this.objects = objects;
     }
 
-    public CardAdapter(Context context, int resource, Class viewHolderClaz) {
-        super(context, resource);
-
-        this.viewHolderClaz = viewHolderClaz;
-        this.context = context;
-        this.resource = resource;
-    }
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+
+        boolean reciclando;
 
         ViewHolder viewHolder = null;
         try {
@@ -62,8 +56,11 @@ public class CardAdapter extends ArrayAdapter<Entity> {
 
             convertView.setTag(viewHolder);
 
+            reciclando = false;
+
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
+            reciclando = true;
         }
 
         Entity entity = getItem(position);
@@ -76,7 +73,7 @@ public class CardAdapter extends ArrayAdapter<Entity> {
                         ((Card) convertView).getCardExpand().setVisibility(View.GONE);
                     }
                 }
-                if (((Card) convertView).getCardHeader().getButton() != null) {
+                if (((Card) convertView).getCardHeader() != null && ((Card) convertView).getCardHeader().getButton() != null) {
                     if (((Card) convertView).getCardHeader().getButton().isSelected()) {
                         ((Card) convertView).getCardHeader().getButton().setSelected(false);
                     }
@@ -87,14 +84,14 @@ public class CardAdapter extends ArrayAdapter<Entity> {
                         ((Card) convertView).getCardExpand().setVisibility(View.VISIBLE);
                     }
                 }
-                if (((Card) convertView).getCardHeader().getButton() != null) {
+                if (((Card) convertView).getCardHeader() != null && ((Card) convertView).getCardHeader().getButton() != null) {
                     if (!((Card) convertView).getCardHeader().getButton().isSelected()) {
                         ((Card) convertView).getCardHeader().getButton().setSelected(true);
                     }
                 }
             }
-            notifyDataSetChanged();
-            if (configureListener != null) configureListener.onConfigure((Card) convertView, entity);
+
+            if (configureListener != null) configureListener.onConfigure((Card) convertView, entity, viewHolder, position, reciclando);
             viewHolder.setEntity(entity);
         }
 
@@ -110,7 +107,14 @@ public class CardAdapter extends ArrayAdapter<Entity> {
     }
 
     public interface ConfigureListener {
-        public void onConfigure(Card card, Entity entity);
+        public void onConfigure(Card card, Entity entity, ViewHolder viewHolder, int position, boolean reciclando);
     }
 
+    public List<Entity> getObjects() {
+        return objects;
+    }
+
+    public void setObjects(List<Entity> objects) {
+        this.objects = objects;
+    }
 }

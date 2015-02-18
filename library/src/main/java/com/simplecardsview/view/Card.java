@@ -352,11 +352,13 @@ public class Card extends FrameLayout {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        configButton();
+        if (!isInEditMode()) {
+            configButton();
+        }
     }
 
     public void configButton() {
-        if (cardHeader.getButton() != null) {
+        if (cardHeader != null && cardHeader.getButton() != null) {
             cardHeader.getButton().setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {

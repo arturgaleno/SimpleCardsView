@@ -1,9 +1,11 @@
 package com.simplecardsview.model;
 
+import java.io.Serializable;
+
 /**
  * Created by artur on 03/09/14.
  */
-public class Entity {
+public class Entity implements Serializable {
 
     private boolean expanded;
 
