@@ -53,30 +53,6 @@ public class MyViewHolder implements ViewHolder {
         button2 = (Button) parent.findViewById(R.id.button2);
 
         checkBox2 = (CheckBox) parent.findViewById(R.id.checkBox2);
-
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(view.getContext(), "Hi, I was clicked!", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        button2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(view.getContext(), "Hi, I was clicked!", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        checkBox2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (((CheckBox) view).isChecked())
-                    Toast.makeText(view.getContext(), "Hi, I was checked!", Toast.LENGTH_SHORT).show();
-                else
-                    Toast.makeText(view.getContext(), "Hi, I was unchecked!", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     @Override
@@ -86,5 +62,45 @@ public class MyViewHolder implements ViewHolder {
 
     public View getParent() {
         return parent;
+    }
+
+    public TextView getTxtvwHeader() {
+        return txtvwHeader;
+    }
+
+    public void setTxtvwHeader(TextView txtvwHeader) {
+        this.txtvwHeader = txtvwHeader;
+    }
+
+    public TextView getTxtvwExpand() {
+        return txtvwExpand;
+    }
+
+    public void setTxtvwExpand(TextView txtvwExpand) {
+        this.txtvwExpand = txtvwExpand;
+    }
+
+    public Button getButton() {
+        return button;
+    }
+
+    public void setButton(Button button) {
+        this.button = button;
+    }
+
+    public Button getButton2() {
+        return button2;
+    }
+
+    public void setButton2(Button button2) {
+        this.button2 = button2;
+    }
+
+    public CheckBox getCheckBox2() {
+        return checkBox2;
+    }
+
+    public void setCheckBox2(CheckBox checkBox2) {
+        this.checkBox2 = checkBox2;
     }
 }

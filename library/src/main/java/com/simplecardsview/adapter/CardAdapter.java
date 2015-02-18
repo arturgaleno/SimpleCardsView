@@ -107,7 +107,7 @@ public class CardAdapter extends ArrayAdapter<Entity> {
     }
 
     public interface ConfigureListener {
-        public void onConfigure(Card card, Entity entity, ViewHolder viewHolder, int position, boolean reciclando);
+        public void onConfigure(Card card, Entity entity, ViewHolder viewHolder, int position, boolean recycling);
     }
 
     public List<Entity> getObjects() {
